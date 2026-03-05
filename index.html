@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Swing Trading</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== CORE STYLES ===== */
+
+body{
+margin:0;
+height:400vh; 
+overflow-x:hidden;
+font-family:'Poppins',sans-serif;
+color:white;
+background:#05070b;
+}
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1920&auto=format&fit=crop")
+center/cover no-repeat;
+opacity:.55;
+filter:brightness(.7) contrast(1.1);
+z-index:-2;
+}
+
+body::after{
+content:"";
+position:fixed;
+inset:0;
+background:linear-gradient(to bottom,rgba(5,7,11,.6),rgba(5,7,11,.92));
+z-index:-1;
+}
+
+/* HERO */
+
+.hero{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:0 10%;
+}
+
+.hero h1{
+font-size:84px;
+margin-bottom:20px;
+color:#16c784;
+}
+
+.hero-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:40px;
+max-width:1000px;
+}
+
+.hero-box{
+background:rgba(255,255,255,0.05);
+padding:25px;
+border-radius:15px;
+border:1px solid rgba(255,255,255,0.1);
+backdrop-filter:blur(10px);
+}
+
+.hero-box h3{
+color:#16c784;
+margin-top:0;
+}
+
+/* ROADMAP */
+
+.content{
+position:relative;
+height:100vh;
+}
+
+.title{
+position:absolute;
+top:5%;
+width:100%;
+text-align:center;
+font-size:52px;
+font-weight:700;
+}
+
+.card{
+position:absolute;
+width:340px;
+height:170px;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+background:rgba(10,15,20,.65);
+backdrop-filter:blur(18px);
+border-radius:16px;
+border:1px solid rgba(255,255,255,.15);
+cursor:pointer;
+transition:.3s;
+font-size:22px;
+}
+
+.card:hover{
+transform:translateY(-6px);
+border-color:#16c784;
+}
+
+.top-left{top:120px;left:90px;}
+.top-right{top:120px;right:90px;}
+.bottom-left{top:440px;left:90px;}
+.bottom-right{top:440px;right:90px;}
+
+/* POPUP */
+
+.popup{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.75);
+backdrop-filter:blur(8px);
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+pointer-events:none;
+transition:.4s;
+z-index:100;
+}
+
+.popup.show{
+opacity:1;
+pointer-events:auto;
+}
+
+.popup-box{
+width:720px;
+max-height:80vh;
+overflow:auto;
+padding:40px;
+background:#0b1117;
+border-radius:18px;
+border:1px solid rgba(255,255,255,.1);
+}
+
+.popup-box img{
+width:100%;
+max-width:400px;
+display:block;
+border-radius:10px;
+margin:14px auto;
+}
+
+.close-btn{
+margin-top:20px;
+padding:10px 18px;
+border:none;
+background:#16c784;
+color:black;
+border-radius:8px;
+cursor:pointer;
+}
+
+/* TICKER */
+
+.ticker-wrapper{
+position:fixed;
+bottom:0;
+width:100%;
+height:45px;
+background:#0b1117;
+overflow:hidden;
+z-index:50;
+}
+
+.ticker{
+display:flex;
+white-space:nowrap;
+animation:tickerMove 25s linear infinite;
+}
+
+.ticker span{margin-right:60px;}
+
+.green{color:#16c784;}
+.red{color:#ea3943;}
+
+@keyframes tickerMove{
+from{transform:translateX(100%);}
+to{transform:translateX(-100%);}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+
+<h1>Swing Trading</h1>
+
+<div class="hero-grid">
+
+<div class="hero-box">
+<h3>What is it?</h3>
+<p>
+A speculative strategy where tradable assets are held for <b>days or weeks</b> to profit from expected price moves.
+</p>
+</div>
+
+<div class="hero-box">
+<h3>Why Swing Trade?</h3>
+<p>
+It requires less screen time than day trading and allows capturing the "meat" of a trend.
+</p>
+</div>
+
+</div>
+
+<p style="margin-top:40px; opacity:0.6;">Scroll down to see the Roadmap ↓</p>
+
+</div>
+
+<div class="content">
+
+<div class="title">The Strategy Roadmap</div>
+
+<div class="card top-left" data-step="step1">STEP 1<br>Stock Selection</div>
+<div class="card top-right" data-step="step2">STEP 2<br>Entry Rule</div>
+<div class="card bottom-left" data-step="step3">STEP 3<br>Risk-Reward</div>
+<div class="card bottom-right" data-step="step4">STEP 4<br>Capital Size</div>
+
+</div>
+
+<div class="popup" id="popup">
+
+<div class="popup-box">
+
+<h2 id="popupTitle"></h2>
+
+<div id="popupContent"></div>
+
+<button class="close-btn" id="closePopup">Close</button>
+
+</div>
+
+</div>
+
+<div class="ticker-wrapper">
+<div class="ticker">
+
+<span class="green">SENSEX 74,352 ▲ +1.24%</span>
+<span class="red">NIFTY 22,541 ▼ -0.42%</span>
+<span class="green">RELIANCE ▲ +0.88%</span>
+<span class="green">TCS ▲ +1.10%</span>
+<span class="red">HDFC ▼ -0.35%</span>
+<span class="green">INFY ▲ +0.67%</span>
+
+</div>
+</div>
+
+<script>
+
+const stepsData={
+
+step1:{
+title:"Step 1 — Stock Selection",
+content:`<ul><li>Add all NIFTY50 stocks to watchlist</li><li>Price above <b>50 EMA</b></li><li>Higher High + Higher Low structure</li><li>Supertrend bullish</li><li>Increasing volume in up moves</li></ul><b>50 EMA Formula:</b><br>EMA = Price × (2/(Period+1)) + Previous EMA × (1−Multiplier)<p>Goal → shortlist trending stocks only.</p>`
+},
+
+step2:{
+title:"Step 2 — Entry Rule",
+content:`
+<ul>
+<li>Wait for pullback to EMA/support</li>
+<li>Enter after bullish candle CLOSE</li>
+<li>Confirm with volume expansion</li>
+</ul>
+
+<h3>Bullish Engulfing</h3>
+<img src="bullish-engulfing.png">
+
+<h3>Strong Green Candle</h3>
+<img src="white-marubozu.png">
+
+<h3>Hammer</h3>
+<img src="hammer.png">
+
+<h3>Morning Star</h3>
+<img src="morning-star.png">
+`
+},
+
+step3:{
+title:"Step 3 — Risk Reward",
+content:`<ul><li>Always maintain <b>1:3 Risk Reward</b></li><li>Stop-loss below support</li><li>Target = Entry + (Risk × 3)</li></ul>Example:<br>Risk ₹5 → Target ₹15`
+},
+
+step4:{
+title:"Step 4 — Capital Management",
+content:`<ul><li>Risk only <b>3% capital</b> per trade</li><li>Formula:</li></ul>Risk Amount = Capital × 0.03<br>Example:<br>Capital ₹3000 → Max Loss ₹90`
+}
+
+};
+
+const popup=document.getElementById("popup");
+const titleEl=document.getElementById("popupTitle");
+const contentEl=document.getElementById("popupContent");
+
+document.querySelectorAll(".card").forEach(c=>{
+c.onclick=()=>{
+let d=stepsData[c.dataset.step];
+titleEl.innerText=d.title;
+contentEl.innerHTML=d.content;
+popup.classList.add("show");
+};
+});
+
+document.getElementById("closePopup").onclick=()=>popup.classList.remove("show");
+
+</script>
+
+</body>
+</html>
